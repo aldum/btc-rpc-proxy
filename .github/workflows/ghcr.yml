@@ -38,13 +38,16 @@ jobs:
           --platform linux/amd64,linux/arm64 --tag $IMAGE_ID \
           --label \"runnumber=${GITHUB_RUN_ID}\" \
           --output type=local,dest=./output"
+
+      - name: Ls
+        run: ls -l output
       - name: Save image
-        run: docker save ${{ env.IMAGE_TAG }} -o ./output/btc-rpc-proxy.img
+        run: docker save ${{ env.IMAGE_TAG }} -o ../btc-rpc-proxy.img
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: output
-          path: ./output
+          name: saved.img
+          path: ./btc-rpc-proxy.img
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Push image
