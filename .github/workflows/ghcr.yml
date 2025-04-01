@@ -31,14 +31,15 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
         env:
           IMAGE_ID: ${{ env.IMAGE_ID }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
           VERSION: ${{ env.VERSION }}
       - name: Build  image
         run: "docker buildx build . \
           --platform linux/amd64,linux/arm64 --tag $IMAGE_ID \
           --label \"runnumber=${GITHUB_RUN_ID}\" \
           --output type=local,dest=./output"
-      # - name: Save image
-      #   run: docker save ${{ env.IMAGE_TAG }} -o ./output/btc-rpc-proxy.img
+      - name: Save image
+        run: docker save ${{ env.IMAGE_TAG }} -o ./output/btc-rpc-proxy.img
       - name: upload
         uses: actions/upload-artifact@v4
         with:
